@@ -8,10 +8,10 @@
   };
   firebase.initializeApp(config);
 
-let name;
-let destination;
-let trainTime;
-let frequency;
+let name = "";
+let destination = "";
+let trainTime = "";
+let frequency = "";
 let database = firebase.database();
 
 $("#button").on("click", function(event){
@@ -22,18 +22,16 @@ $("#button").on("click", function(event){
 	frequency = $("#frequency").val().trim();
 
 
-	database.ref().push({
+	database.ref().set({
 		name: name,
 		destination: destination,
 		traintime: trainTime,
 		frequency: frequency
 	});
 
-
-
-
-
 });
+
+console.log(moment().endOf('trainTime').fromNow());
 
 database.ref().on("value", function(snapshot){
 	console.log(snapshot.val().name);
