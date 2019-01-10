@@ -22,7 +22,7 @@ $("#button").on("click", function(event){
 	frequency = $("#frequency").val().trim();
 
 
-	database.ref().set({
+	database.ref().push({
 		name: name,
 		destination: destination,
 		traintime: trainTime,
@@ -31,15 +31,21 @@ $("#button").on("click", function(event){
 
 });
 
-console.log(moment().endOf('trainTime').fromNow());
+
 
 database.ref().on("value", function(snapshot){
 	console.log(snapshot.val().name);
 	console.log(snapshot.val().destination);
 	console.log(snapshot.val().traintime);
 	console.log(snapshot.val().frequency);
+    let trainTimeConverted = moment(trainTime, "HH:mm").subtract(1, "years");
+    let currentTime = moment();
+    let diffTime = currentTime.diff(moment(trainTimeConverted), "minutes");
+    let stops = diffTime % frequency;
+    let minutesTillTrain = frequency - stops;
+    let nextTrain = moment().add(minutesTillTrain, "minutes");
 
-	$(".body").append("<tr> <td>" + snapshot.val().name + "</td>" + "<td>" + snapshot.val().destination + "</td> <td>" + snapshot.val().frequency + "</td> <td>" + snapshot.val().traintime + "</td> </tr>");
+	$(".body").append("<tr> <td>" + snapshot.val().name + "</td>" + "<td>" + snapshot.val().destination + "</td> <td>" + snapshot.val().frequency + "</td> <td>" + moment(nextTrain).format("hh:mm") + "</td> <td>" + minutesTillTrain + "</td> </tr>");
 
 
 })
