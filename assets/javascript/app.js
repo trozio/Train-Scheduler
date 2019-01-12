@@ -31,8 +31,6 @@ $("#button").on("click", function(event){
 
 });
 
-
-
 database.ref().on("value", function(snapshot){
 	console.log(snapshot.val().name);
 	console.log(snapshot.val().destination);
@@ -46,6 +44,4 @@ database.ref().on("value", function(snapshot){
     let nextTrain = moment().add(minutesTillTrain, "minutes");
 
 	$(".body").append("<tr> <td>" + snapshot.val().name + "</td>" + "<td>" + snapshot.val().destination + "</td> <td>" + snapshot.val().frequency + "</td> <td>" + moment(nextTrain).format("hh:mm") + "</td> <td>" + minutesTillTrain + "</td> </tr>");
-
-
 })
