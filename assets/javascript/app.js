@@ -1,4 +1,4 @@
-  var config = {
+var config = {
     apiKey: "AIzaSyDXcfdArCmoR7kQNUDgg9rnUgCNBdQkuwA",
     authDomain: "train-scheduler-b732a.firebaseapp.com",
     databaseURL: "https://train-scheduler-b732a.firebaseio.com",
@@ -22,7 +22,7 @@ $("#button").on("click", function(event){
 	frequency = $("#frequency").val().trim();
 
 
-	database.ref().push({
+	database.ref().set({
 		name: name,
 		destination: destination,
 		traintime: trainTime,
@@ -38,11 +38,11 @@ database.ref().on("value", function(snapshot){
 	console.log(snapshot.val().destination);
 	console.log(snapshot.val().traintime);
 	console.log(snapshot.val().frequency);
-    let trainTimeConverted = moment(trainTime, "HH:mm").subtract(1, "years");
+    let trainTimeConverted = moment(snapshot.val().traintime, "HH:mm").subtract(1, "years");
     let currentTime = moment();
     let diffTime = currentTime.diff(moment(trainTimeConverted), "minutes");
-    let stops = diffTime % frequency;
-    let minutesTillTrain = frequency - stops;
+    let stops = diffTime % snapshot.val().frequency;
+    let minutesTillTrain = snapshot.val().frequency - stops;
     let nextTrain = moment().add(minutesTillTrain, "minutes");
 
 	$(".body").append("<tr> <td>" + snapshot.val().name + "</td>" + "<td>" + snapshot.val().destination + "</td> <td>" + snapshot.val().frequency + "</td> <td>" + moment(nextTrain).format("hh:mm") + "</td> <td>" + minutesTillTrain + "</td> </tr>");
