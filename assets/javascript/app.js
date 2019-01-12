@@ -21,21 +21,19 @@ $("#button").on("click", function(event){
 	trainTime = $("#firstTrainTime").val().trim();
 	frequency = $("#frequency").val().trim();
 
-
-	database.ref().set({
+    let newTrain = {
 		name: name,
 		destination: destination,
 		traintime: trainTime,
 		frequency: frequency
-	});
+	};
+
+	database.ref().push(newTrain);
 
 });
 
-database.ref().on("value", function(snapshot){
-	console.log(snapshot.val().name);
-	console.log(snapshot.val().destination);
-	console.log(snapshot.val().traintime);
-	console.log(snapshot.val().frequency);
+database.ref().on("child_added", function(snapshot){
+	console.log(snapshot.val());
     let trainTimeConverted = moment(snapshot.val().traintime, "HH:mm").subtract(1, "years");
     let currentTime = moment();
     let diffTime = currentTime.diff(moment(trainTimeConverted), "minutes");
